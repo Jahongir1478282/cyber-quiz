@@ -5,7 +5,7 @@ qo'shiladi. Jadval har 5 soniyada o'zi yangilanadi, shuning uchun uni darsda pro
 
 ## Imkoniyatlar
 
-- 42 ta savollik bank (9 ta mavzu). Har bir talabaga tasodifiy 20 ta savol tushadi, variantlar tartibi ham har xil.
+- 48 ta kuchaytirilgan savollar banki (4-kurs darajasidagi 4 yo'nalish: Risk management, Tahdid razvedkasi, Kriptografik protokollar, Reverse engineering). Har bir talabaga tasodifiy 20 ta savol tushadi, variantlar tartibi ham har xil.
 - Taymer (standart 20 daqiqa). Vaqt tugasa, javoblar avtomatik topshiriladi.
 - Sahifa tasodifan yangilansa, belgilangan javoblar saqlanib qoladi.
 - Asosiy oynada barcha natijalar: o'rin, foiz, 5 ballik baho, sarflangan vaqt.
