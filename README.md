@@ -9,7 +9,7 @@ Loyiha ikki rejimda ishlaydi:
 
 ## Imkoniyatlar
 
-- 48 ta savol banki (Risk management, Tahdid razvedkasi, Kriptografik protokollar, Reverse engineering).
+- 83 ta savol banki (Kriptografiya usullari).
 - Har bir talabaga tasodifiy savollar va aralashtirilgan variantlar.
 - Taymer (standart 20 daqiqa), vaqt tugasa avtomatik submit.
 - Brauzer yangilansa belgilangan javoblar saqlanib qoladi.
@@ -45,7 +45,7 @@ Umumiy live jadval uchun Upstash Redis ulang:
 | `ATTEMPT_SECRET` | Stateless urinish tokenini imzolash uchun maxfiy kalit | Ha (tavsiya) |
 | `ADMIN_PASSWORD` | O'qituvchi paneli paroli (Redis rejimi uchun) | Ixtiyoriy |
 | `QUIZ_FORCE_REDIS` | `1` bo'lsa Redis ulanmaguncha live testni bloklaydi | Live uchun ha |
-| `QUIZ_QUESTION_COUNT` | Har talabaga savollar soni (standart 20) | Yo'q |
+| `QUIZ_QUESTION_COUNT` | Har talabaga savollar soni (standart 80) | Yo'q |
 | `QUIZ_TIME_MINUTES` | Test vaqti daqiqada (standart 20) | Yo'q |
 
 ### 5-qadam. Qayta deploy
