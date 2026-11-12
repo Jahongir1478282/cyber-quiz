@@ -86,8 +86,10 @@ export default function QuizClient({ id, title }) {
         }
         writeStore("sessionStorage", ACTIVE_KEY, null);
         writeStore("sessionStorage", answersKey(id), null);
-        writeStore("localStorage", MINE_KEY, { id: body.result.id });
-        setResult({ ...body.result, auto });
+        if (body.persisted !== false) {
+          writeStore("localStorage", MINE_KEY, { id: body.result.id });
+        }
+        setResult({ ...body.result, auto, persisted: body.persisted !== false });
         setPhase("result");
       } catch {
         submittedRef.current = false;
@@ -168,7 +170,11 @@ export default function QuizClient({ id, title }) {
             To'g'ri javoblar: <b>{result.correct}</b> / {result.total} · Baho: <b>{result.grade}</b> · Vaqt:{" "}
             <b>{formatDuration(result.durationSec)}</b>
           </p>
-          <p className="muted">Natijangiz asosiy oynadagi umumiy jadvalga qo'shildi.</p>
+          <p className="muted">
+            {result.persisted
+              ? "Natijangiz asosiy oynadagi umumiy jadvalga qo'shildi."
+              : "Natijangiz hisoblandi. Stateless rejim sabab umumiy jadvalga saqlanmadi."}
+          </p>
           <Link className="btn primary" href="/">
             Natijalar jadvaliga o'tish
           </Link>

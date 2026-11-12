@@ -1,6 +1,6 @@
 import { listResults, isClosed, storageKind } from "@/lib/store";
 import { sortResults, publicResult } from "@/lib/quiz";
-import { json } from "@/lib/http";
+import { json, fail } from "@/lib/http";
 
 export const dynamic = "force-dynamic";
 
@@ -23,8 +23,36 @@ function csvCell(value) {
 
 // Barcha natijalar (reyting tartibida). ?format=csv — Excel uchun fayl
 export async function GET(request) {
-  const results = sortResults((await listResults()).map(publicResult));
   const format = new URL(request.url).searchParams.get("format");
+
+  if (storageKind === "redis-required") {
+    if (format === "csv") {
+      return fail("CSV uchun Upstash Redis ulanishi kerak.", 503);
+    }
+    return json({
+      results: [],
+      closed: true,
+      storage: storageKind,
+      leaderboardAvailable: false,
+      error: "Live rejim uchun Upstash Redis ulanmagan.",
+      serverNow: Date.now(),
+    });
+  }
+
+  if (storageKind === "stateless") {
+    if (format === "csv") {
+      return fail("Stateless rejimda umumiy natijalar saqlanmaydi, shuning uchun CSV mavjud emas.", 409);
+    }
+    return json({
+      results: [],
+      closed: false,
+      storage: storageKind,
+      leaderboardAvailable: false,
+      serverNow: Date.now(),
+    });
+  }
+
+  const results = sortResults((await listResults()).map(publicResult));
 
   if (format === "csv") {
     const header = ["No", "Ism-familiya", "To'g'ri javoblar", "Jami savollar", "Foiz", "Baho", "Sarflangan vaqt (soniya)", "Kech topshirgan", "Topshirilgan vaqt"];

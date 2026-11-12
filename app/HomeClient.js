@@ -122,6 +122,9 @@ export default function HomeClient({ title, subtitle, count, minutes }) {
   }
 
   const results = data?.results || [];
+  const isStateless = data?.storage === "stateless";
+  const isRedisRequired = data?.storage === "redis-required";
+  const showAdminPanel = !isStateless && !isRedisRequired;
   const closed = !!data?.closed;
   const total = results.length;
   const avg = total ? Math.round(results.reduce((s, r) => s + r.percent, 0) / total) : 0;
@@ -155,6 +158,12 @@ export default function HomeClient({ title, subtitle, count, minutes }) {
           Vercel'da Upstash Redis'ni ulang (README faylida ko'rsatilgan).
         </p>
       )}
+      {isStateless && (
+        <p className="banner info">
+          Stateless rejim yoqilgan: test ishlaydi, lekin umumiy natijalar jadvali va o'qituvchi paneli saqlanmaydi.
+        </p>
+      )}
+      {isRedisRequired && <p className="banner error">{data?.error || "Live rejim uchun Upstash Redis ulanmagan."}</p>}
       {loadError && <p className="banner error">{loadError}</p>}
 
       <div className="layout">
@@ -206,7 +215,7 @@ export default function HomeClient({ title, subtitle, count, minutes }) {
             <li>
               Vaqt: <b>{minutes}</b> daqiqa. Vaqt tugasa, javoblar avtomatik topshiriladi
             </li>
-            <li>Har bir talaba testni faqat bir marta topshiradi</li>
+            <li>{isStateless ? "Stateless rejimda natija umumiy jadvalga yozilmaydi" : "Har bir talaba testni faqat bir marta topshiradi"}</li>
             <li>Savollar va variantlar har bir talabada boshqacha tartibda</li>
           </ul>
         </section>
@@ -239,7 +248,11 @@ export default function HomeClient({ title, subtitle, count, minutes }) {
           {!data && !loadError ? (
             <p className="empty">Natijalar yuklanmoqda…</p>
           ) : total === 0 ? (
-            <p className="empty">Hali hech kim test topshirmadi. Birinchi natija shu yerda paydo bo'ladi.</p>
+            <p className="empty">
+              {isStateless
+                ? "Stateless rejimda umumiy jadval saqlanmaydi. Har bir talaba o'z natijasini test tugagach ko'radi."
+                : "Hali hech kim test topshirmadi. Birinchi natija shu yerda paydo bo'ladi."}
+            </p>
           ) : (
             <div className="table-wrap">
               <table className="results">
@@ -310,7 +323,8 @@ export default function HomeClient({ title, subtitle, count, minutes }) {
         </section>
       </div>
 
-      <details className="card admin">
+      {showAdminPanel && (
+        <details className="card admin">
         <summary>O'qituvchi paneli</summary>
         {!adminOk ? (
           <form
@@ -366,7 +380,8 @@ export default function HomeClient({ title, subtitle, count, minutes }) {
           </div>
         )}
         {adminMsg && <p className="admin-msg">{adminMsg}</p>}
-      </details>
+        </details>
+      )}
     </main>
   );
 }

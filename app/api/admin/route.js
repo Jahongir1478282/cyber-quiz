@@ -1,5 +1,5 @@
 import crypto from "node:crypto";
-import { setClosed, clearResults, deleteResult } from "@/lib/store";
+import { setClosed, clearResults, deleteResult, storageKind } from "@/lib/store";
 import { json, fail, readJson } from "@/lib/http";
 
 export const dynamic = "force-dynamic";
@@ -15,6 +15,14 @@ function checkPassword(password) {
 
 // O'qituvchi amallari: check | open | close | reset | delete
 export async function POST(request) {
+  if (storageKind === "redis-required") {
+    return fail("Live rejim uchun Upstash Redis ulanmagan.", 503);
+  }
+
+  if (storageKind === "stateless") {
+    return fail("O'qituvchi paneli stateless rejimda o'chiriladi. Bu funksiyalar uchun Upstash Redis kerak.", 503);
+  }
+
   const body = await readJson(request);
   const status = checkPassword(body?.password);
 
